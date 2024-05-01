@@ -3,12 +3,14 @@ import {useParams} from 'react-router-dom';
 import { Swiper , SwiperSlide} from 'swiper/react';
 import SwiperCore from 'swiper';
 import {Navigation} from 'swiper/modules';
+import {useSelector} from 'react-redux';
 import 'swiper/css/bundle';
 import {FaBath, FaBed, FaChair,
     FaMapMarkedAlt,
     FaMapMarkerAlt,
     FaParking,
     FaShare} from 'react-icons/fa'
+import Contact from '../components/Contact';
 
 export default function Listing() {
     SwiperCore.use([Navigation]);
@@ -16,10 +18,13 @@ export default function Listing() {
     const [loading,setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [contact, setContact] = useState(false);
     const params = useParams();
+    const currentUser = useSelector((state) => state.user.currentUser);
   
+    console.log(currentUser._id, listing?.userRef);
     useEffect(() => {
-        console.log('useEffect method called');
+        
         const fetchListing = async () => {
           try {
             setLoading(true);
@@ -37,13 +42,13 @@ export default function Listing() {
           } catch (error) {
             setError(true);
             setLoading(false);
-            console.log(error);
+            
           }
         };
        
         fetchListing();
       }, [params.listingId]);
-      console.log(params);
+      
       
     
   return (
@@ -136,6 +141,13 @@ export default function Listing() {
                     </li>
 
                   </ul>
+                  { currentUser && listing.userRef !== currentUser && !contact && (
+
+                    <button onClick={() => setContact(true)} className=
+                    'bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3'> 
+                        Contact Landlord </button>
+                  )} 
+                  {contact && <Contact listing = {listing}/>}
             </div>
          </div>
           
