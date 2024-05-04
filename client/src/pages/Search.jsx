@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import ListingItem from '../components/ListingItem';
 
 export default function Search() {
     const navigate = useNavigate();
@@ -60,23 +61,38 @@ export default function Search() {
 
     const handleChange = (e) => {
 
-        if(e.target.id === 'all' || e.target.id === 'rent' || e.target.id === 'sale')
+        if(
+            e.target.id === 'all' || 
+            e.target.id === 'rent' || 
+            e.target.id === 'sale'
+        )
         {
             setSidebardata({...sidebardata, type: e.target.id});
         }
+        
         if(e.target.id === 'searchTerm')
         {
             setSidebardata({...sidebardata, searchTerm: e.target.value});
         }
-        if(e.target.id === 'parking' || e.target.id === 'offer' || e.target.id === 'furnished')
+        
+        if(
+            e.target.id === 'parking' || 
+            e.target.id === 'offer' || 
+            e.target.id === 'furnished'
+        )
         {
-            setSidebardata({...sidebardata,
-             [e.target.id]: e.target.checked || e.target.checked === 'true' ? true : false,});
+            setSidebardata({
+                ...sidebardata,
+                [e.target.id]:
+                 e.target.checked || e.target.checked === 'true' ? true : false,
+                });
         }
         if(e.target.id === 'sort_order')
         {
             const sort = e.target.value.split('_')[0] || 'created_at';
+
             const order = e.target.value.split('_')[1] || 'desc';
+            
             setSidebardata({ ...sidebardata, sort, order});
         }
 };
@@ -93,7 +109,7 @@ const handleSubmit = (e) => {
     urlParams.set('sort', sidebardata.sort);
     urlParams.set('order', sidebardata.order);
     const searchQuery = urlParams.toString();
-    navigate(`search?${searchQuery}`);
+    navigate(`/search?${searchQuery}`);
 };
 
   return (
@@ -184,14 +200,28 @@ const handleSubmit = (e) => {
                         
                     </select>
                 </div>
-                <button className='bg-slate-700 text-white hover:opacity-95 p-3 rounded-lg uppercase'>Search</button>
+                <button className='bg-slate-700 text-white hover:opacity-95 p-3 rounded-lg uppercase'>
+                    Search</button>
             </form>
         </div>
+        <div className='flex-1'>
             <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5 '>
                 Listing results:
             </h1>
-        <div>
-
+            <div className='p-7 flex flex-wrap gap-4'> 
+                {!loading && listings.length === 0 && (
+                    <p className='text-xl text-slate-700'>
+                        No listing found!
+                    </p>
+                )}
+                {loading && (
+                    <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
+                )}
+                {
+                    !loading && listings && listings.map((listing) => 
+                    <ListingItem key={listing._id} listing={listing}/>)
+                }
+            </div>
         </div>
    </div>
 )
