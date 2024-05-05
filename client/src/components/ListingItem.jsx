@@ -7,7 +7,8 @@ export default function ListingItem({listing}) {
     <div className='bg-white shadow-md hover:shadow-lg transition-shadow
             overflow-hidden rounded-lg w-full sm:w-[330px]'>
         <Link to = {`listing/${listing._id}`}>
-            <img src= {listing.imageUrls[0]} alt='listing cover'
+            <img src= {listing.imageUrls[0] || 'https://smartasset.com/wp-content/uploads/sites/2/2022/02/luxurious-villa-with-pool-picture-id506903162.jpg'} 
+            alt='listing cover'
                 className='h-[320px] sm:h-[220px] w-full object-cover hover:scale-105
                  transion-scale duration-300'
             /> 
